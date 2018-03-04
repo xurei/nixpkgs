@@ -1,6 +1,6 @@
 {stdenv, fetchgit, luajit, openblas, imagemagick, cmake, curl, fftw, gnuplot
   , libjpeg, zeromq3, ncurses, openssl, libpng, qt4, readline, unzip
-  , pkgconfig, zlib, libX11, which, fetchFromGitHub, git, hdf5
+  , pkgconfig, zlib, libX11, which, fetchFromGitHub, git, hdf5, cudatoolkit
   }:
 stdenv.mkDerivation rec{
   version = "0.0pre20160820";
@@ -8,7 +8,7 @@ stdenv.mkDerivation rec{
   buildInputs = [
     luajit openblas imagemagick cmake curl fftw gnuplot unzip qt4
     libjpeg zeromq3 ncurses openssl libpng readline pkgconfig
-    zlib libX11 which git hdf5
+    zlib libX11 which git hdf5 cudatoolkit
   ];
 
   src = fetchgit {
@@ -30,16 +30,24 @@ stdenv.mkDerivation rec{
   #   tar -xzf $torch_hdf5_src --strip-components=1
   # '';
 
+  tmpBuildDir = "/tmp/${name}";
+
   buildPhase = ''
     cd ..
-    export PREFIX=$out
+    export PREFIX=${tmpBuildDir}
     mkdir -p "$out"
+    mkdir -p "${tmpBuildDir}"
 
     mkdir -p $out/torch_hdf5
     cp -R $torch_hdf5_src/* $out/torch_hdf5
 
-    sh install.sh -s
-    # cp -R -L /home/olivier/nix/nixpkgs/distro-8b6a834/install/* $out
+    if [ -d ${tmpBuildDir} ]; then
+      #nothing to do
+      ;
+    else
+      sh install.sh -s
+    fi
+    cp -R -L ${tmpBuildDir} $out
     export HOME=$TMP
     $out/bin/luarocks install totem
     $out/bin/luarocks install cutorch
