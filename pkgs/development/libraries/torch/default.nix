@@ -34,9 +34,7 @@ stdenv.mkDerivation rec{
 
   buildPhase = ''
     cd ..
-    export PREFIX=${tmpBuildDir}
     mkdir -p "$out"
-    mkdir -p "${tmpBuildDir}"
 
     mkdir -p $out/torch_hdf5
     cp -R $torch_hdf5_src/* $out/torch_hdf5
@@ -44,9 +42,11 @@ stdenv.mkDerivation rec{
     if [ -d ${tmpBuildDir} ]; then
       echo 'Torch already compiled'
     else
+      export PREFIX=${tmpBuildDir}
+      mkdir -p "${tmpBuildDir}"
       sh install.sh -s
     fi
-    cp -R -L ${tmpBuildDir} $out
+    cp -R -L ${tmpBuildDir}/* $out
     export HOME=$TMP
     $out/bin/luarocks install totem
     $out/bin/luarocks install cutorch
