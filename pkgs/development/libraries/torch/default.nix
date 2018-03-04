@@ -42,8 +42,7 @@ stdenv.mkDerivation rec{
     cp -R $torch_hdf5_src/* $out/torch_hdf5
 
     if [ -d ${tmpBuildDir} ]; then
-      #nothing to do
-      ;
+      echo 'Torch already compiled'
     else
       sh install.sh -s
     fi
