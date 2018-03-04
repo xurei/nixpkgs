@@ -38,10 +38,12 @@ stdenv.mkDerivation rec{
     mkdir -p $out/torch_hdf5
     cp -R $torch_hdf5_src/* $out/torch_hdf5
 
-    # sh install.sh -s
-    cp -R -L /home/olivier/nix/nixpkgs/distro-8b6a834/install/* $out
+    sh install.sh -s
+    # cp -R -L /home/olivier/nix/nixpkgs/distro-8b6a834/install/* $out
     export HOME=$TMP
     $out/bin/luarocks install totem
+    $out/bin/luarocks install cutorch
+    $out/bin/luarocks install cunn
 
     cd $out/torch_hdf5
     $out/bin/luarocks make hdf5-0-0.rockspec
