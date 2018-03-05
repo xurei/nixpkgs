@@ -26,12 +26,14 @@ stdenv.mkDerivation rec{
     sha256 = "15cf2km3ky0wj3n6r0z28w90aysj21i5w003bar0xsq6a2r2171f";
   };
 
+  torchPath = "/home/olivier/torch";
+
   buildPhase = ''
     cd ..
     mkdir -p "$out"
-
+    cp -R ${torchPath}/* $out
     mkdir -p $out/torch_hdf5
-    cp -R $torch_hdf5_src/* $out/torch_hdf5
+    rm -R $out/bin/*
 
     export PREFIX=$out
     sh install.sh -s
@@ -39,10 +41,14 @@ stdenv.mkDerivation rec{
     export HOME=$TMP
     $out/bin/luarocks install cunn
     $out/bin/luarocks install totem
+    $out/bin/luarocks install rnn
     # $out/bin/luarocks install cutorch
 
     cd $out/torch_hdf5
+    cp -R $torch_hdf5_src/* $out/torch_hdf5
     $out/bin/luarocks make hdf5-0-0.rockspec
+
+    cp -R $out/* ${torchPath}
   '';
   installPhase = ":";
   meta = {
