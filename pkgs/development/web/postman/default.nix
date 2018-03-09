@@ -45,35 +45,34 @@ stdenv.mkDerivation rec {
   preFixup = let
     libPath = lib.makeLibraryPath [
       stdenv.cc.cc.lib
-      gnome2.pango
       gnome2.GConf
-      pkgs.atk
+      gnome2.pango
       pkgs.alsaLib
+      pkgs.atk
       pkgs.cairo
       pkgs.cups
       pkgs.dbus_daemon.lib
       pkgs.expat
+      pkgs.fontconfig
+      pkgs.freetype
       pkgs.gdk_pixbuf
       pkgs.glib
       pkgs.gtk2-x11
-      pkgs.freetype
-      pkgs.fontconfig
-      pkgs.nss
       pkgs.nspr
+      pkgs.nss
       pkgs.udev.lib
       xlibs.libX11
       xlibs.libxcb
-      xlibs.libXi
+      xlibs.libXcomposite
       xlibs.libXcursor
       xlibs.libXdamage
-      xlibs.libXrandr
-      xlibs.libXcomposite
       xlibs.libXext
       xlibs.libXfixes
+      xlibs.libXi
+      xlibs.libXrandr
       xlibs.libXrender
-      xlibs.libX11
-      xlibs.libXtst
       xlibs.libXScrnSaver
+      xlibs.libXtst
     ];
   in ''
     patchelf \
